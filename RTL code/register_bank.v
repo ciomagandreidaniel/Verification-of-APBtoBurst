@@ -1,4 +1,9 @@
-//register_bank
+/*--------------------------------------------------*/
+// Module : register_bank                                                               
+// Author : Ciobanu Eduard Mihai                                                        
+// Date  : 30.08.2020                                                                
+// Description : 
+
 
 module register_bank(
 //global inputs
@@ -65,6 +70,7 @@ if((~rc_rb_rw & db_rb_req) & (db_rb_addr < LENGTH_ADDR)) data_reg[db_rb_addr]<=d
 
 //length register
 always @(posedge clk or negedge rst_n)
+if(~rst_n                                           )length<=8'b00000000;else
 if(rc_rb_req & rc_rb_rw & (rc_rb_addr ==LENGTH_ADDR))length<=rc_rb_data;
 
 //rw register
@@ -74,10 +80,12 @@ if( ~rc_rb_rw)rw<=8'b00000000;
 
 //max burst size register
 always @(posedge clk or negedge rst_n)
+if(~rst_n                                                    )max_burst_size<=8'b00000000;else
 if(rc_rb_req  & rc_rb_rw & (rc_rb_addr ==MAX_BURST_SIZE_ADDR))max_burst_size<=rc_rb_data;
 
 //start register
 always @(posedge clk or negedge rst_n)
+if(~rst_n                                              )start_reg<=8'b00000000;else
 if(rc_rb_req & rc_rb_rw & (rc_rb_addr ==START_REG_ADDR))start_reg<=rc_rb_data ;else
 if(db_rb_idle                                          )start_reg<=8'b00000000;
 

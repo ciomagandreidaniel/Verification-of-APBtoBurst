@@ -113,7 +113,7 @@ data_burst_controller    db_ctrl_dut(
 .db_rb_idle              (db_rb_idle          ),
 .db_rb_rd_done           (db_rb_rd_done       ),
 .burst_valid             (burst_valid         ),
-.burst_ready             (1'b1                ),
+.burst_ready             (burst_ready         ),
 .data_burst_in           (data_burst_in       ),
 .burst_last              (burst_last          ),
 .data_burst_out          (data_burst_out      ),

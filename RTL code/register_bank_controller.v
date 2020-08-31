@@ -1,4 +1,9 @@
-//register bank controller
+/*--------------------------------------------------*/
+// Module : register_bank_controller                                                               
+// Author : Ciobanu Eduard Mihai                                                        
+// Date  : 30.08.2020                                                                
+// Description : 
+
 
 module register_bank_controller(
 //apb inputs
@@ -40,11 +45,11 @@ localparam START_REG_ADDR      =9'd258;
 
 
 
-assign prdata     = rb_rc_data;
-assign rc_rb_addr = paddr     ;
-assign rc_rb_req  = penable   ;
-assign rc_rb_data = pwdata    ;
-assign rc_rb_rw   = pwrite    ;
+assign prdata     = rb_rc_data                                   ;
+assign rc_rb_addr = paddr                                        ;
+assign rc_rb_req  =(psel)? penable:1'b0                          ;
+assign rc_rb_data =(paddr==9'd257 & pwdata>8'd32)? 8'd32:pwdata  ;
+assign rc_rb_rw   = pwrite                                       ;
 
 //plsverr
 always @(posedge clk or negedge rst_n)

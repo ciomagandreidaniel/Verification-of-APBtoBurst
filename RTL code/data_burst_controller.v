@@ -1,3 +1,11 @@
+/*--------------------------------------------------*/
+// Module : data_burst_controller                                                               
+// Author : Ciobanu Eduard Mihai                                                        
+// Date  : 30.08.2020                                                                
+// Description : 
+
+
+
 module data_burst_controller(
 //register bank inputs
 input                  clk                  ,//the global clock
@@ -34,7 +42,7 @@ reg [8:0] generated_w_addr;
 reg [8:0] generated_rb_addr;
 reg [7:0] w_count_length;
 reg [7:0] r_count_length;
-reg [5:0] w_count_burst;
+reg [6:0] w_count_burst;
 
 // register for state
 reg [3:0] state;
@@ -64,13 +72,10 @@ case(state)
                                                         state<=INIT;
     CONFIG:if(rb_db_rw)                                 state<=GEN_BURST;else
 	                                                    state<=READ_BURST;
-	GEN_BURST:                                          state<=GEN_W_ADDR;
-	READ_BURST:                                         state<=GEN_RD_ADDR;
-    GEN_W_ADDR:if(w_count_length==0)                    state<=DONE;else
-	           if( w_count_burst==0)                    state<=RST_BURST_SIZE;else
+    GEN_BURST:if(w_count_length==1)                     state<=DONE;else
+	          if( w_count_burst==0)                     state<=GEN_BURST;else
                                                         state<=GEN_BURST;
-	RST_BURST_SIZE:                                     state<=GEN_BURST;
-	GEN_RD_ADDR:if(r_count_length==0)                   state<=RD_DONE;else
+	READ_BURST:if(r_count_length==0)                    state<=RD_DONE;else
 	                                                    state<=READ_BURST;
 	RD_DONE:                                            state<=DONE;
 	DONE:                                               state<=INIT;
@@ -89,7 +94,7 @@ end
 always @(posedge clk or negedge rst_n)				   
 if(~rst_n                          )generated_w_addr<=9'b0;else
 if(state==CONFIG                   )generated_w_addr<=9'b0;else
-if(state==GEN_W_ADDR & burst_ready )generated_w_addr<=generated_w_addr+1;
+if(state==GEN_BURST & burst_ready  )generated_w_addr<=generated_w_addr+1;
 
 //w_count_legth
 always @(posedge clk or negedge rst_n)
@@ -99,25 +104,25 @@ if(state==GEN_BURST   & burst_ready )w_count_length<=w_count_length-1;
 
 //w_count_burst
 always @(posedge clk or negedge rst_n)
-if(~rst_n                         )w_count_burst<=4'b0;else
-if(state==CONFIG                  )w_count_burst<=rb_db_max_burst_size;else
-if(state==RST_BURST_SIZE          )w_count_burst<=rb_db_max_burst_size;else
-if(state==GEN_BURST & burst_ready )w_count_burst<=w_count_burst-1;
+if(~rst_n                          )w_count_burst<=4'b0;else
+if(state==CONFIG                   )w_count_burst<=rb_db_max_burst_size;else
+if( w_count_burst==0               )w_count_burst<=rb_db_max_burst_size-1;else
+if(state==GEN_BURST & burst_ready  )w_count_burst<=w_count_burst-1;
 
 ////////////////////////////////////////////
 //internal signals for the read transaction
 ////////////////////////////////////////////
 //r_count_legth
 always @(posedge clk or negedge rst_n)
-if(~rst_n                     )r_count_length<=4'b0;else
-if(state==CONFIG              )r_count_length<=rb_db_length;else
-if(burst_valid                )r_count_length<=r_count_length-1;
+if(~rst_n                          )r_count_length<=4'b0;else
+if(state==CONFIG                   )r_count_length<=rb_db_length-1;else
+if(state==READ_BURST & burst_valid )r_count_length<=r_count_length-1;
 
 // generated_r_addr
 always @(posedge clk or negedge rst_n)
-if(~rst_n                   ) generated_rb_addr<=9'b0;else
-if(state==CONFIG            ) generated_rb_addr<=9'b0;else
-if(burst_valid              ) generated_rb_addr<=generated_rb_addr+1;
+if(~rst_n                          ) generated_rb_addr<=9'b0;else
+if(state==CONFIG                   ) generated_rb_addr<=9'b0;else
+if(state==READ_BURST & burst_valid ) generated_rb_addr<=generated_rb_addr+1;
 
 //////////////////////////////////////////
 // Generate signals for the register bank
@@ -130,14 +135,14 @@ if(~rb_db_rw )db_rb_addr<=generated_rb_addr;
 
 //db_rb_req
 always @(posedge clk or negedge rst_n) 
-if(~rst_n                         )db_rb_req<=1'b0;else
-if(~burst_ready                   )db_rb_req<=1'b0;else
-if(burst_valid | state==GEN_BURST )db_rb_req<=1'b1;else
-                                   db_rb_req<=1'b0;
+if(~rst_n                                                               )db_rb_req<=1'b0;else
+if(~burst_ready                                                         )db_rb_req<=1'b0;else
+if((state==READ_BURST & burst_valid) | (state==GEN_BURST & burst_ready) )db_rb_req<=1'b1;else
+                                                                         db_rb_req<=1'b0;
 												   
 //db_rb_data
 always @(posedge clk or negedge rst_n)
-if( burst_valid )db_rb_data<=data_burst_in;
+if(state==READ_BURST & burst_valid )db_rb_data<=data_burst_in;
 
 //db_rb_idle
 always @(posedge clk or negedge rst_n)
@@ -166,17 +171,17 @@ assign db_length=rb_db_length;
   
 //db_valid
 always @(posedge clk or negedge rst_n)
-if(~rst_n                                              )db_valid<=1'b0;else
-if(~burst_ready                                        )db_valid<=1'b0;else
-if(state==GEN_W_ADDR                                   )db_valid<=1'b1;else
-if(state==GEN_BURST |state==RST_BURST_SIZE|state==DONE )db_valid<=1'b0;
+if(~rst_n                                           )db_valid<=1'b0;else
+if(~burst_ready                                     )db_valid<=1'b0;else
+if(state==GEN_BURST & w_count_length<rb_db_length   )db_valid<=1'b1;else
+if(state==INIT                                      )db_valid<=1'b0;
 
 //last
 always @(posedge clk or negedge rst_n)
-if(~rst_n                                                                     )last<=1'b0;else
-if(state==GEN_W_ADDR& w_count_burst==0 | state==GEN_W_ADDR & w_count_length==0)last<=1'b1;else
-                                                                               last<=1'b0;
-																			   
+if(~rst_n                                                                    )last<=1'b0;else
+if(state==GEN_BURST& w_count_burst==0 | (w_count_length==0 &state==DONE)     )last<=1'b1;else
+                                                                              last<=1'b0;
+																		 	   
 //db_ready
 always @(posedge clk or negedge rst_n)
 if(~rst_n           ) db_ready<=1'b0;else
