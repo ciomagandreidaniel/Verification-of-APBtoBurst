@@ -58,7 +58,7 @@ burst.burst_size = max_burst_size_reg_copy;
 burst.data_bytes = new  [1];
 
 $display(" %0d : APB_Monitor :  Start task", $time);
-$display(" %0d : APB_Monitor :  Normal Burst size  is %0d", $time,normal_bursts);
+$display(" %0d : APB_Monitor :  The number of Normal Bursts  is %0d", $time,normal_bursts);
 $display(" %0d : APB_Monitor :  Last Burst size  is %0d", $time,off_burst_size);  
 
 forever begin

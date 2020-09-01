@@ -1,6 +1,7 @@
 `ifndef GUARD_SCOREBOARD
 `define GUARD_SCOREBOARD
 
+`include "register_model.sv"
 `include "Burst.sv"
 
 class Scoreboard;
@@ -25,7 +26,10 @@ fromapb2sb.get(burst_exp);
 if(burst_rcv.compare(burst_exp))
 $display(" %0d : Scoreboard : Burst Matched ",$time);
 else
+begin
 $display(" %0d : Scoreboard : ERROR!!!!!!!!!!!!!",$time);
+errors = errors +1;
+end
 end
 
 endtask : start

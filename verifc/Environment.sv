@@ -16,7 +16,8 @@
 
 `ifndef GUARD_ENV
 `define GUARD_ENV
-
+ 
+`include "register_model.sv"
 `include "APB_Agent.sv"
 `include "BM_Agent.sv"
 `include "Scoreboard.sv"
@@ -71,16 +72,16 @@ endfunction :build
 task reset();
 $display(" %0d : Environment : start of reset() method",$time);
 //Drive all DUT inputs to a known state
-apb_driver_intf.apb_driver_cb.paddr       <= 0;                 
-apb_driver_intf.apb_driver_cb.psel        <= 0;
-apb_driver_intf.apb_driver_cb.penable     <= 0;             
-apb_driver_intf.apb_driver_cb.pwrite      <= 0;             
-apb_driver_intf.apb_driver_cb.pwdata      <= 0;
+this.apb_driver_intf.apb_driver_cb.paddr       <= 0;                 
+this.apb_driver_intf.apb_driver_cb.psel        <= 0;
+this.apb_driver_intf.apb_driver_cb.penable     <= 0;             
+this.apb_driver_intf.apb_driver_cb.pwrite      <= 0;             
+this.apb_driver_intf.apb_driver_cb.pwdata      <= 0;
 
-bm_driver_intf.bm_driver_cb.burst_valid   <= 0;
-bm_driver_intf.bm_driver_cb.burst_ready   <= 0;
-bm_driver_intf.bm_driver_cb.data_burst_in <= 0;
-bm_driver_intf.bm_driver_cb.burst_last    <= 0;
+this.bm_driver_intf.bm_driver_cb.burst_valid   <= 0;
+this.bm_driver_intf.bm_driver_cb.burst_ready   <= 0;
+this.bm_driver_intf.bm_driver_cb.data_burst_in <= 0;
+this.bm_driver_intf.bm_driver_cb.burst_last    <= 0;
                 
 $display(" %0d : Environment : end of reset() method",$time);
 endtask : reset
@@ -125,6 +126,9 @@ $display(" %0d : Environment : end of run() method",$time);
 endtask : run
 
 task report();
+
+$display(" %0d : Error Report : The number of errors is %0d", $time, errors);
+
 endtask : report
 
 endclass

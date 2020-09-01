@@ -15,6 +15,8 @@
 `ifndef GUARD_INTERFACE
 `define GUARD_INTERFACE
 
+`include "register_model.sv"
+
 //------------------------------------------------------------------------------
 // Interface declaration for the APB
 //------------------------------------------------------------------------------
@@ -111,15 +113,25 @@ interface apb_interface (input bit clk, rst_n);
   // Assertions to check the safety properties
 
   xstate_apb_check             : assert property (APB_PRDATA_NO_X_STATE)
-                                 else $warning("*WARNING* prdata is x!!!!!!!!!!!!!!!!!!!!");
+                                 else 
+                                 $warning("*WARNING* prdata is x!!!!!!!!!!!!!!!!!!!!");
+
   apb_penable_psel_check       : assert property (APB_NO_PENABLE_OUTSIDE_CYCLE2)
-                                 else $warning("*WARNING* peanble is HIGH outside APB cycle!!!!!!!!!!!!");
+                                 else  
+                                 $warning("*WARNING* peanble is HIGH outside APB cycle!!!!!!!!!!!!");
+
   apb_stable_signals_check_1   : assert property (APB_WRITE_AND_ADDR_STABLE)
-                                 else $warning("*WARNING* pwrite or paddr not stable!!!!!!!!!!!!!!!!!");
+                                 else 
+                                 $warning("*WARNING* pwrite or paddr not stable!!!!!!!!!!!!!!!!!");
+
   apb_stable_signals_check_2   : assert property (APB_WRITE_DATA_STABLE)
-                                 else $warning("*WARNING* pwdata not stable!!!!!!!!!!!!!!!!!!");
+                                 else 
+                                 $warning("*WARNING* pwdata not stable!!!!!!!!!!!!!!!!!!");
+
   apb_plsverr_check            : assert property (APB_PLSVERR)
-                                 else $warning("*WARNING* wrong assertion on plsverr!!!!!!!!!!!");
+                                 else 
+                                 $warning("*WARNING* wrong assertion on plsverr!!!!!!!!!!!");
+
 
      
 
@@ -187,10 +199,13 @@ property X_STATE_ON_OUTPUTS;
 endproperty
 
 burs_ready_check     : assert property (DATA_ON_BURST_READY)
-                       else $warning("*WARNING* data_burst_out not stable when burst_ready is LOW!!!!");
+                       else 
+                       $warning("*WARNING* data_burst_out not stable when burst_ready is LOW!!!!");
 
 xstate_bm_check      : assert property (X_STATE_ON_OUTPUTS)
-                       else $warning("*WARNING* bm_interface outputs are in x state!!!!!!!!!"); 
+                       else 
+                       $warning("*WARNING* bm_interface outputs are in x state!!!!!!!!!");
+
 
 endinterface : bm_interface
 

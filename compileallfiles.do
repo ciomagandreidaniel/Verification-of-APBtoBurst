@@ -21,6 +21,3 @@ vlog -reportprogress 300 -work work {D:/Verification-of-APBtoBurst/verifc/Scoreb
 vlog -reportprogress 300 -work work {D:/Verification-of-APBtoBurst/verifc/Environment.sv}
 vlog -reportprogress 300 -work work {D:/Verification-of-APBtoBurst/verifc/testcase.sv}
 vlog -reportprogress 300 -work work {D:/Verification-of-APBtoBurst/verifc/top.sv}
-vsim work.top -novopt -sv_seed random
-
-run -all

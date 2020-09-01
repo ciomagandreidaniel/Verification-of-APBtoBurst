@@ -30,11 +30,11 @@ input                  burst_last           ,//it's HIGH when the last data from
 
 //burst outputs
 
-output  reg   [7:0]    data_burst_out       ,// the data transferred as a burst using the burst interface
+output        [7:0]    data_burst_out       ,// the data transferred as a burst using the burst interface
 output        [7:0]    db_length            ,// the length of data 
-output  reg            last                 ,// high when we transfer the last data from a burst
+output                 last                 ,// high when we transfer the last data from a burst
 output  reg            db_ready             ,// the ready signal from the DB
-output  reg            db_valid              // the valid signal it's HIGH when we transfer data from the burst interface
+output                 db_valid              // the valid signal it's HIGH when we transfer data from the burst interface
 
 );
 // data regs
@@ -160,28 +160,18 @@ if(state==RD_DONE       ) db_rb_rd_done<=1'b1;
 // Generate signals for the burst interface
 ////////////////////////
 //data_burst_out
-always @(posedge clk or negedge rst_n)
-if(~rst_n | ~rb_db_rw ) data_burst_out<='b0;else
-if(rb_db_ack          ) data_burst_out<=rb_db_data;
 
+assign data_burst_out= (~rst_n | ~rb_db_rw )?'b0:(rb_db_ack)? rb_db_data:rb_db_data;
 
 //db_length
 assign db_length=rb_db_length;
 
   
 //db_valid
-always @(posedge clk or negedge rst_n)
-if(~rst_n                                           )db_valid<=1'b0;else
-if(~burst_ready                                     )db_valid<=1'b0;else
-if(state==GEN_BURST & w_count_length<rb_db_length   )db_valid<=1'b1;else
-if(state==INIT                                      )db_valid<=1'b0;
+assign db_valid=(~rst_n)?1'b0:(rb_db_ack | state==DONE |(state==GEN_BURST & w_count_length<rb_db_length))?1'b1:1'b0;
 
-//last
-always @(posedge clk or negedge rst_n)
-if(~rst_n                                                                    )last<=1'b0;else
-if(state==GEN_BURST& w_count_burst==0 | (w_count_length==0 &state==DONE)     )last<=1'b1;else
-                                                                              last<=1'b0;
-																		 	   
+//last																			  
+assign last=(state==GEN_BURST& w_count_burst==0 | (w_count_length==0 &state==DONE))? last<=1'b1:(~rst_n)?1'b0:1'b0;																		 	   
 //db_ready
 always @(posedge clk or negedge rst_n)
 if(~rst_n           ) db_ready<=1'b0;else

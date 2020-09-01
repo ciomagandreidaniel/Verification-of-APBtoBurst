@@ -9,10 +9,11 @@ virtual bm_interface.BM_DRIVER bm_intf;
 
 
 Burst_ready burst_rdy;
+mailbox bm_mailbox_driver;
 
-
-function new(virtual bm_interface.BM_DRIVER bm_intf_new);
-this.bm_intf = bm_intf_new;
+function new(virtual bm_interface.BM_DRIVER bm_intf_new, mailbox bm_mailbox_driver_new);
+this.bm_intf           = bm_intf_new;
+this.bm_mailbox_driver = bm_mailbox_driver_new;
 endfunction : new 
 
 task start_burst_ready;
@@ -29,7 +30,7 @@ burst_rdy = new();
    this.bm_intf.bm_driver_cb.burst_ready <= ~this.bm_intf.bm_driver_cb.burst_ready; 
   end
  else
- $display("Failed to randomize burst_ready");
+ $display(" %0d : BM_Driver : Failed to randomize burst_ready", $time);
  end
 endtask : start_burst_ready
 

@@ -35,7 +35,7 @@ this.paddr  = paddr_new;
 endfunction : cfg
 
 virtual function void display();
-$display(" %0d : %s transfer at %d address, data = %d",$time, pwrite.name(),paddr, pwdata);
+$display(" %0d : APB_transfer : %s transfer at %d address, data = %d",$time, pwrite.name(),paddr, pwdata);
 endfunction : display
 
 endclass

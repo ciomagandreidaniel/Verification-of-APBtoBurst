@@ -38,7 +38,7 @@ $display(" %0d : BM_Monitor : Start task", $time);
 
 forever begin
  @(posedge bm_intf.clk);
- wait(bm_intf.bm_monitor_cb.db_valid /* & bm_intf.bm_monitor_cb.db_valid */ )
+ wait(bm_intf.bm_monitor_cb.db_valid & bm_intf.bm_monitor_cb.burst_ready)
  if(~bm_intf.bm_monitor_cb.last)
  begin
  burst.data_bytes[i] = bm_intf.bm_monitor_cb.data_burst_out;

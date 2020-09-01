@@ -3,9 +3,10 @@
 
 class Burst;
 
-bit [7:0] data_bytes [];
+rand bit [7:0] data_bytes [];
 bit [7:0] burst_size;
 
+constraint burst_size_c { data_bytes.size == burst_size ;} 
 
 virtual function bit compare(Burst burst);
 compare = 1;
