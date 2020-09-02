@@ -1,7 +1,7 @@
 `ifndef GUARD_BM_GENERATOR
 `define GUARD_BM_GENERATOR
 
-`include "register_model.sv"
+`include "register_model"
 
 class BM_Generator;
 mailbox bm_mailbox_generator;

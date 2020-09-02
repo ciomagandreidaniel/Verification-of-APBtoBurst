@@ -1,6 +1,7 @@
 `ifndef GUARD_APB_AGENT
 `define GUARD_APB_AGENT
 
+`include "register_model.sv"
 `include "APB_Generator.sv"
 `include "APB_Driver.sv"
 `include "APB_Monitor.sv"
@@ -34,10 +35,12 @@ drvr.cfg();
 endtask : cfg
 
 task start();
+
+$display("The curent Transaction isssssssssssssssssssssssssssssss %s", current_transaction);
 fork
-genr.start(); 
+genr.start(READ_TRANSACTION); 
 drvr.start();
-mont.start();
+//mont.start();
 join_any
 
 endtask : start

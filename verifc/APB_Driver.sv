@@ -55,8 +55,16 @@ forever begin
 apb_transfer_mailbox.get(apbt_rcv);
 apbt_rcv.display();
 drive_transfer(apbt_rcv);
+if(current_transaction == READ_TRANSACTION)
+begin
+$display(" %0d : APB_Driver : This is a read transaction++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++", $time);
+this.apb_intf.apb_driver_cb.pwrite <= 0;
+end
+else
+begin
+$display(" %0d : APB_Driver : This is not read transaction++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++", $time);
+end 
 @(posedge apb_intf.clk);
-
 end
 
 endtask : start
@@ -73,82 +81,6 @@ this.apb_intf.apb_driver_cb.psel    <= 0;
 this.apb_intf.apb_driver_cb.penable <= 0;
 endtask : drive_transfer
 
-
-
-/*
-task cfg();
-APB_transfer length_reg;
-APB_transfer max_burst_size_reg;
-
-length_reg = new();
-max_burst_size_reg = new ();
-
-length_reg.cfg(WRITE,256);
-max_burst_size_reg.cfg(WRITE,257);
-if(length_reg.randomize())
-begin
-$display (" %0d : Driver Config Length Register : Randomization Successes full. ",$time);
-length_reg.display();
-length_reg_copy = length_reg.pwdata;
-drive_transfer(length_reg);
-end
-
-if(max_burst_size_reg.randomize() with { max_burst_size_reg.pwdata <= 32; max_burst_size_reg.pwdata >=1; })
-begin
-$display (" %0d : Driver Config Max Burst Size Register : Randomization Successes full. ",$time);
-max_burst_size_reg.display();
-max_burst_size_reg_copy = max_burst_size_reg.pwdata;
-drive_transfer(max_burst_size_reg);
-end
-
-
-endtask : cfg
-
-*/
-
-/*
-task start();
-
-APB_transfer apbt_data;
-APB_transfer apbt_start;
-
-int data_address_increment = 0;
-$display("APB_Driver start function");
-$display("%0d : Writing in the data registers", $time);
-
-repeat(length_reg_copy)
-begin
-apbt_data = new();
-
-if(apbt_data.randomize())
-
- begin
- $display (" %0d : Driver : Data Randomization Successes full. ",$time);
- apbt_data.cfg(WRITE, data_address_increment);
- apbt_data.display();
- @(posedge apb_intf.clk);
- drive_transfer(apbt_data);
- data_address_increment = data_address_increment +1;
- end
-
-end
-
-begin
-apbt_start = new ();
-
- @(posedge apb_intf.clk);
-
-$display (" %0d : Driver Config Start Register :  ",$time);
-
-apbt_start.cfg(WRITE,258);
-apbt_start.pwdata = 255;
-apbt_start.display();
-drive_transfer(apbt_start);
-end
-
-
-endtask : start
-*/
 endclass : APB_Driver
 
 `endif

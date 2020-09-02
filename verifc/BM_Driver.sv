@@ -34,6 +34,37 @@ burst_rdy = new();
  end
 endtask : start_burst_ready
 
+task start_read();
+
+bit [7:0] data_byte;
+int i = 0; 
+
+forever begin
+ bm_mailbox_driver.get(data_byte);
+ $display(" %0d : BM_Driver : Has received a data_byte via mailbox", $time);
+ if(i<7)
+ begin
+  @(posedge bm_intf.clk);
+  bm_intf.bm_driver_cb.burst_last <= 0;
+  //bm_intf.bm_driver_cb.burst_valid <= 0;
+  wait(bm_intf.bm_driver_cb.db_ready);
+  bm_intf.bm_driver_cb.data_burst_in <= data_byte;
+  bm_intf.bm_driver_cb.burst_valid <= 1;
+  i = i + 1;
+   $display(" %0d : BM_Driver : Put data byte %0d on data_burst_in", $time,data_byte);
+ end
+ else
+ begin
+   @(posedge bm_intf.clk);
+ bm_intf.bm_driver_cb.burst_last <= 1;
+ bm_intf.bm_driver_cb.data_burst_in <= data_byte;
+ bm_intf.bm_driver_cb.burst_valid <= 1;
+ i = 0;
+    $display(" %0d : BM_Driver : Put data byte %0d on data_burst_in", $time,data_byte);
+ end
+end
+endtask : start_read
+
 endclass : BM_Driver
 
 

@@ -18,15 +18,18 @@ virtual bm_interface.BM_DRIVER bm_driver_intf_new,
 virtual bm_interface.BM_MONITOR bm_monitor_intf_new,
 mailbox mon2scb_new
 );
+mailbox_genr_drvr = new();
 drvr = new(bm_driver_intf_new, mailbox_genr_drvr);
 mont = new(bm_monitor_intf_new, mon2scb_new);
 genr = new(mailbox_genr_drvr);
 endfunction : new 
 
 task start();
+genr.start();
 fork
 drvr.start_burst_ready();
-mont.start();
+drvr.start_read();
+//mont.start();
 join_any
 endtask : start
 

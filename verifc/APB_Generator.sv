@@ -43,7 +43,13 @@ $display(" %0d : APB_Generator put the Length Register configuration in the mail
 end
 endtask : cfg
 
-task start();
+task start(transaction_e trans);
+
+current_transaction = trans; 
+
+if( trans == WRITE_TRANSACTION)
+begin
+
 APB_transfer apbt_data;
 APB_transfer apbt_start;
 
@@ -76,8 +82,26 @@ apbt_start.pwdata = 255;
 
 apb_transfer_mailbox.put(apbt_start);
 
-end 
+end
+
+end
+
+else if (trans == READ_TRANSACTION)
+
+begin
+APB_transfer apbt_start;
+apbt_start = new ();
+
+$display (" %0d : APB_Generator : Put Start Register configuration in the mailbox  ",$time);
+apbt_start.cfg(WRITE,258);
+apbt_start.pwdata = 255;
+
+apb_transfer_mailbox.put(apbt_start);
+end
+ 
 endtask : start
+
+
 
 endclass : APB_Generator
 
