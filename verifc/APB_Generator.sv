@@ -45,8 +45,6 @@ endtask : cfg
 
 task start(transaction_e trans);
 
-current_transaction = trans; 
-
 if( trans == WRITE_TRANSACTION)
 begin
 

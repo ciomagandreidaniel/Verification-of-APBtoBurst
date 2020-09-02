@@ -55,15 +55,6 @@ forever begin
 apb_transfer_mailbox.get(apbt_rcv);
 apbt_rcv.display();
 drive_transfer(apbt_rcv);
-if(current_transaction == READ_TRANSACTION)
-begin
-$display(" %0d : APB_Driver : This is a read transaction++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++", $time);
-this.apb_intf.apb_driver_cb.pwrite <= 0;
-end
-else
-begin
-$display(" %0d : APB_Driver : This is not read transaction++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++", $time);
-end 
 @(posedge apb_intf.clk);
 end
 
