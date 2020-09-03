@@ -15,7 +15,9 @@ this.frombm2sb  = frombm2sb_new;
 endfunction : new
 
 task start();
-
+//if current transaction is WRITE TRANSACTION
+if(current_transaction == WRITE_TRANSACTION)
+begin
 Burst burst_rcv, burst_exp;
 
 forever begin
@@ -30,6 +32,13 @@ begin
 $display(" %0d : Scoreboard : ERROR!!!!!!!!!!!!!",$time);
 errors = errors +1;
 end
+end
+end
+
+//if current transaction is READ_TRANSACTION
+else if (current_transaction == READ_TRANSACTION)
+begin
+
 end
 
 endtask : start

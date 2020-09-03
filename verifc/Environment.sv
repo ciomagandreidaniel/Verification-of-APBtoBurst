@@ -82,6 +82,10 @@ this.bm_driver_intf.bm_driver_cb.burst_valid   <= 0;
 this.bm_driver_intf.bm_driver_cb.burst_ready   <= 0;
 this.bm_driver_intf.bm_driver_cb.data_burst_in <= 0;
 this.bm_driver_intf.bm_driver_cb.burst_last    <= 0;
+
+@(posedge bm_driver_intf.clk);
+@(posedge bm_driver_intf.clk);
+@(posedge bm_driver_intf.clk);
                 
 $display(" %0d : Environment : end of reset() method",$time);
 endtask : reset

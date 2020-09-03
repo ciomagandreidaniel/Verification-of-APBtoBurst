@@ -29,7 +29,7 @@ genr.start();
 fork
 drvr.start_burst_ready();
 drvr.start_read();
-//mont.start();
+mont.start();
 join_any
 endtask : start
 

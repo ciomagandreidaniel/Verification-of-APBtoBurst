@@ -28,8 +28,14 @@ function new(virtual bm_interface.BM_MONITOR bm_intf_new, mailbox mon2scb_new);
 
 endfunction : new
 
-task start();
+//--------------------------------------------------------------------------------------------------------
+// START TASK
+//--------------------------------------------------------------------------------------------------------
 
+task start();
+//if current transaction is WRITE_TRANSACTION
+if(current_transaction == WRITE_TRANSACTION)
+begin
 int i = 0;
 burst = new();
 burst.data_bytes = new [1]; 
@@ -57,6 +63,14 @@ forever begin
  burst.data_bytes = new [1]; 
  i = 0;
  end
+end
+end
+
+
+//if current transaction is READ_TRANSACTION 
+else if(current_transaction == READ_TRANSACTION)
+begin
+
 end
 
 endtask : start

@@ -29,10 +29,10 @@ endfunction : new
 
 task cfg();
 
-//std::randomize(current_transaction); 
+std::randomize(current_transaction); 
 
 //current_transaction = WRITE_TRANSACTION;
-current_transaction = READ_TRANSACTION;
+//current_transaction = READ_TRANSACTION;
 
 $display(" %0d : APB_Agent : The curent Transaction is %s", $time,current_transaction);
 genr.cfg();
@@ -45,7 +45,7 @@ task start();
 fork
 genr.start(); 
 drvr.start();
-//mont.start();
+mont.start();
 join_any
 
 endtask : start

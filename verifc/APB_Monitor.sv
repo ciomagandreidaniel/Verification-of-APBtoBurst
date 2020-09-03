@@ -44,7 +44,18 @@ function new(virtual apb_interface.APB_MONITOR apb_intf_new, mailbox mon2scb_new
 
 endfunction : new
 
+//-----------------------------------------------------------------------------------------------------
+// START TASK
+//-----------------------------------------------------------------------------------------------------
+
 task start();
+
+//if the current transaction is WRITE_TRANSACTION
+
+if(current_transaction == WRITE_TRANSACTION)
+
+begin
+
 int j = 0;
 int i = 0;
 int normal_bursts  = length_reg_copy / max_burst_size_reg_copy;
@@ -142,6 +153,14 @@ forever begin
       end
        
 
+
+end
+
+end
+
+//if the current transaction is READ_TRANSACTION
+else if(current_transaction == READ_TRANSACTION)
+begin
 
 end
 
