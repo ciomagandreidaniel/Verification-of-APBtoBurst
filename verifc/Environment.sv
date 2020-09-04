@@ -127,11 +127,18 @@ start();
 wait_for_end();
 report();
 $display(" %0d : Environment : end of run() method",$time);
+$stop;
 endtask : run
 
 task report();
 
 $display(" %0d : Error Report : The number of errors is %0d", $time, errors);
+
+if(apbmailbox.num() !== 0)
+$display(" %0d : Error Report : The APB_Monitor Mailbox has %0d  messages", $time,apbmailbox.num()); 
+
+if(bmmailbox.num() !== 0)
+$display(" %0d : Error Report : The BM_Monitor Mailbox has %0d  messages", $time,apbmailbox.num()); 
 
 endtask : report
 

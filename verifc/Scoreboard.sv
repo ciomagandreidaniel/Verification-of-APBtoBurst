@@ -39,6 +39,25 @@ end
 else if (current_transaction == READ_TRANSACTION)
 begin
 
+bit [7:0] data_to_read_rcv;
+bit [7:0] data_to_read_exp;
+
+forever begin
+fromapb2sb.get(data_to_read_rcv);
+$display(" %0d : Scoreboard : Scoreboard received a data byte from receiver ",$time);
+frombm2sb.get(data_to_read_exp);
+if(data_to_read_exp !== data_to_read_rcv)
+begin
+$display(" %0d : Scoreboard : ERROR!!!!!!!!!!!!!",$time);
+$display(" %0d : Scoreboard : Data byte received is %0d and the data byte expected is %0d",$time, data_to_read_rcv, data_to_read_exp);
+errors = errors +1;
+end
+else
+begin
+$display(" %0d : Scoreboard : Burst Matched ",$time);
+end
+end
+
 end
 
 endtask : start

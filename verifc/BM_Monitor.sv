@@ -71,6 +71,16 @@ end
 else if(current_transaction == READ_TRANSACTION)
 begin
 
+bit [7:0] data_to_read;
+$display(" %0d : BM_Monitor : Start task", $time);
+forever begin
+@(posedge bm_intf.clk);
+wait(bm_intf.bm_monitor_cb.db_ready & bm_intf.bm_monitor_cb.burst_valid);
+data_to_read = bm_intf.bm_monitor_cb.data_burst_in;
+mon2scb.put(data_to_read);
+$display(" %0d : BM_Monitor : Data byte send to Scoreboard via mailbox", $time);
+end
+ 
 end
 
 endtask : start

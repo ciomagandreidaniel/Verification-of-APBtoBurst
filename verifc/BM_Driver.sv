@@ -52,7 +52,7 @@ forever begin
  begin
   @(posedge bm_intf.clk);
   bm_intf.bm_driver_cb.burst_last <= 0;
-  //bm_intf.bm_driver_cb.burst_valid <= 0;
+  bm_intf.bm_driver_cb.burst_valid <= 0;
   wait(bm_intf.bm_driver_cb.db_ready);
   bm_mailbox_driver.get(data_byte);
   $display(" %0d : BM_Driver : Has received a data_byte via mailbox", $time);
@@ -63,7 +63,8 @@ forever begin
  end
  else
  begin
-   @(posedge bm_intf.clk);
+ @(posedge bm_intf.clk);
+ bm_intf.bm_driver_cb.burst_valid <= 0;
  wait(bm_intf.bm_driver_cb.db_ready);
  bm_mailbox_driver.get(data_byte);
  $display(" %0d : BM_Driver : Has received a data_byte via mailbox", $time);

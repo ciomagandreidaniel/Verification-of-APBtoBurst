@@ -161,7 +161,18 @@ end
 //if the current transaction is READ_TRANSACTION
 else if(current_transaction == READ_TRANSACTION)
 begin
-
+bit [7:0] data_to_read;
+$display(" %0d : APB_Monitor :  Start task", $time);
+forever begin
+@(posedge apb_intf.clk);
+wait((~apb_intf.apb_monitor_cb.pwrite)  & 
+       apb_intf.apb_monitor_cb.psel    & 
+       apb_intf.apb_monitor_cb.penable &
+      (apb_intf.apb_monitor_cb.paddr <= 255));
+data_to_read = apb_intf.apb_monitor_cb.prdata;
+mon2scb.put(data_to_read);
+$display(" %0d : APB_Monitor : Data byte send to Scoreboard via mailbox", $time);
+end
 end
 
 endtask : start
