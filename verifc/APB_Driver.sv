@@ -35,6 +35,10 @@ endfunction : new
                                                                                         
 task cfg();
 
+$display(" %0d : APB_Driver : cfg() task", $time);
+
+wait(apb_intf.apb_driver_cb.idle);
+
 if(current_transaction == WRITE_TRANSACTION)
 begin
 APB_transfer length_reg_rcv, max_burst_size_reg_rcv;
@@ -84,20 +88,22 @@ task start();
 APB_transfer apbt_rcv;
 $display(" %0d : APB_Driver : Start task to drive the data bytes", $time);
 
-forever begin
+//forever begin
 //if the current transaction is a WRITE_TRANSACTION
 if(current_transaction == WRITE_TRANSACTION)
 begin
-
+repeat (length_reg_copy + 1) begin
 apb_transfer_mailbox.get(apbt_rcv);
 apbt_rcv.display();
 drive_transfer(apbt_rcv);
 $display(" %0d : APB_Driver : Drive a Write transfer to DUT", $time);
 @(posedge apb_intf.clk);
 end
+end
 //if the current transaction is a READ_TRANSACTION
 else if (current_transaction == READ_TRANSACTION)
 begin
+repeat (length_reg_copy) begin
 wait(apb_intf.apb_driver_cb.apb_rd_done);
 apb_transfer_mailbox.get(apbt_rcv);
 apbt_rcv.display();
@@ -106,6 +112,7 @@ $display(" %0d : APB_Driver : Drive a READ transfer to DUT", $time);
 @(posedge apb_intf.clk);
 end
 end
+//end
 
 endtask : start
 

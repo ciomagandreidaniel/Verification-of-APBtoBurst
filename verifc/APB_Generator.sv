@@ -25,6 +25,8 @@ APB_transfer length_reg;
 APB_transfer max_burst_size_reg;
 APB_transfer start_reg;
 
+$display(" %0d : APB_Generator : cfg() task", $time);
+
 //If the current transaction is a WRITE_TRANSACTION
 
 if(current_transaction == WRITE_TRANSACTION)
@@ -51,7 +53,7 @@ $display (" %0d : APB_Generator Config Max Burst Size Register : Randomization S
 max_burst_size_reg_copy = max_burst_size_reg.pwdata;
 //send the max burst size register configuration via mailbox
 apb_transfer_mailbox.put(max_burst_size_reg);
-$display(" %0d : APB_Generator put the Length Register configuration in the mailbox.", $time);
+$display(" %0d : APB_Generator put the Max Burst Size Register configuration in the mailbox.", $time);
 end
 end
 

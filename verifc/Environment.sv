@@ -54,6 +54,10 @@ this.bm_monitor_intf = bm_monitor_intf_new;
 $display(" %0d : Environment : created env object", $time);
 endfunction : new
 
+//---------------------------------------------------------------------------------------
+// BUILD FUNCTION
+//---------------------------------------------------------------------------------------
+
 function void build();
 $display(" %0d : Environment : start of build() method",$time);
 
@@ -68,6 +72,10 @@ sb = new(apbmailbox, bmmailbox);
 
 $display(" %0d : Environment : end of build() method",$time);
 endfunction :build
+
+//---------------------------------------------------------------------------------------
+// RESET TASK
+//---------------------------------------------------------------------------------------
 
 task reset();
 $display(" %0d : Environment : start of reset() method",$time);
@@ -90,16 +98,30 @@ this.bm_driver_intf.bm_driver_cb.burst_last    <= 0;
 $display(" %0d : Environment : end of reset() method",$time);
 endtask : reset
 
+//---------------------------------------------------------------------------------------
+// CFG_DUT TASK
+//---------------------------------------------------------------------------------------
+
 task cfg_dut();
 $display(" %0d : Environment : start of cfg_dut() method",$time);
+
+//std::randomize(current_transaction); 
+//current_transaction = WRITE_TRANSACTION;
+current_transaction = READ_TRANSACTION;
+
+$display(" %0d : Environment : Configuration - The curent Transaction is %s", $time,current_transaction);
 
 apb_agent.cfg();
 
 $display(" %0d : Environment : end of cfg_dut() method",$time);
 endtask : cfg_dut
 
-task start();
-$display(" %0d : Environment : start of start() method",$time);
+//---------------------------------------------------------------------------------------
+// START_TRANSACTION TASK
+//---------------------------------------------------------------------------------------
+
+task start_transaction();
+$display(" %0d : Environment : start of start_transaction() method",$time);
 
 fork
 
@@ -109,26 +131,51 @@ sb.start();
 
 join_any
 
+$display(" %0d : Environment : end of start_transaction() method",$time);
+endtask : start_transaction
+
+//---------------------------------------------------------------------------------------
+// START TASK (cfg, start_transaction ...)
+//---------------------------------------------------------------------------------------
+
+task start();
+$display(" %0d : Environment : start of start() method",$time);
+repeat(2) begin
+cfg_dut();
+start_transaction();
+wait_for_end();
+report();
+end
 $display(" %0d : Environment : end of start() method",$time);
 endtask : start
 
+//---------------------------------------------------------------------------------------
+// WAIT_FOR_END	TASK
+//---------------------------------------------------------------------------------------
+
 task wait_for_end();
 $display(" %0d : Environment : start of wait_for_end() method",$time);
-#40000
+#30000
 $display(" %0d : Environment : end of wait_for_end() method",$time);
 endtask : wait_for_end
+
+
+//---------------------------------------------------------------------------------------
+// RUN TASK
+//---------------------------------------------------------------------------------------
 
 task run();
 $display(" %0d : Environment : start of run() method",$time);
 build();
 reset();
-cfg_dut();
 start();
-wait_for_end();
-report();
 $display(" %0d : Environment : end of run() method",$time);
 $stop;
 endtask : run
+
+//---------------------------------------------------------------------------------------
+// REPORT TASK
+//---------------------------------------------------------------------------------------
 
 task report();
 

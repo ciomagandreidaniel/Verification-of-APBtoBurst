@@ -20,7 +20,7 @@ endfunction : new
 // START_BURST_READY TASK
 //-----------------------------------------------------------------------------------------------------
 
-task start_burst_ready;
+task start_burst_ready();
 
 burst_rdy = new();
 
@@ -47,7 +47,7 @@ task start_read();
 bit [7:0] data_byte;
 int i = 0; 
 
-forever begin
+repeat(bm_intf.bm_driver_cb.db_length) begin
  if(i<7)
  begin
   @(posedge bm_intf.clk);
