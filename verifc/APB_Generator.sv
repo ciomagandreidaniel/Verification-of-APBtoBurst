@@ -36,7 +36,7 @@ max_burst_size_reg = new ();
 
 length_reg.cfg(WRITE,256);
 max_burst_size_reg.cfg(WRITE,257);
-if(length_reg.randomize())
+if(length_reg.randomize() with { length_reg.pwdata >= 1;})
 begin
 $display (" %0d : APB_Generator Config Length Register : Randomization Successes full. ",$time);
 
@@ -46,7 +46,7 @@ apb_transfer_mailbox.put(length_reg);
 $display(" %0d : APB_Generator put the Length Register configuration in the mailbox.", $time);
 end
 
-if(max_burst_size_reg.randomize() with { max_burst_size_reg.pwdata <= 32; max_burst_size_reg.pwdata >=1; })
+if(max_burst_size_reg.randomize() with { max_burst_size_reg.pwdata <= 32; max_burst_size_reg.pwdata >=1; max_burst_size_reg.pwdata <= length_reg_copy ;})
 begin
 $display (" %0d : APB_Generator Config Max Burst Size Register : Randomization Successes full. ",$time);
 

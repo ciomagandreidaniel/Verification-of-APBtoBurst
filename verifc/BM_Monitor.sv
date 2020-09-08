@@ -39,10 +39,10 @@ begin
 int i = 0;
 burst = new();
 burst.data_bytes = new [1]; 
-$display(" %0d : BM_Monitor : Start task", $time);
+$display(" %0d : BM_Monitor : Start task - WRITE_TRANSACTION", $time);
 
 
-forever begin
+repeat(length_reg_copy) begin
  @(posedge bm_intf.clk);
  wait(bm_intf.bm_monitor_cb.db_valid & bm_intf.bm_monitor_cb.burst_ready)
  if(~bm_intf.bm_monitor_cb.last)
@@ -64,6 +64,8 @@ forever begin
  i = 0;
  end
 end
+
+start_scoreboard = 0;
 end
 
 
@@ -72,15 +74,14 @@ else if(current_transaction == READ_TRANSACTION)
 begin
 
 bit [7:0] data_to_read;
-$display(" %0d : BM_Monitor : Start task", $time);
-forever begin
+$display(" %0d : BM_Monitor : Start task - READ_TRANSACTION", $time);
+repeat(length_reg_copy) begin
 @(posedge bm_intf.clk);
 wait(bm_intf.bm_monitor_cb.db_ready & bm_intf.bm_monitor_cb.burst_valid);
 data_to_read = bm_intf.bm_monitor_cb.data_burst_in;
 mon2scb.put(data_to_read);
 $display(" %0d : BM_Monitor : Data byte send to Scoreboard via mailbox", $time);
 end
- 
 end
 
 endtask : start

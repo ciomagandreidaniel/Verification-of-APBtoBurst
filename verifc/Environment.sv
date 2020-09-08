@@ -87,7 +87,7 @@ this.apb_driver_intf.apb_driver_cb.pwrite      <= 0;
 this.apb_driver_intf.apb_driver_cb.pwdata      <= 0;
 
 this.bm_driver_intf.bm_driver_cb.burst_valid   <= 0;
-this.bm_driver_intf.bm_driver_cb.burst_ready   <= 0;
+this.bm_driver_intf.bm_driver_cb.burst_ready   <= 1;
 this.bm_driver_intf.bm_driver_cb.data_burst_in <= 0;
 this.bm_driver_intf.bm_driver_cb.burst_last    <= 0;
 
@@ -105,9 +105,11 @@ endtask : reset
 task cfg_dut();
 $display(" %0d : Environment : start of cfg_dut() method",$time);
 
-//std::randomize(current_transaction); 
+std::randomize(current_transaction); 
 //current_transaction = WRITE_TRANSACTION;
-current_transaction = READ_TRANSACTION;
+//current_transaction = READ_TRANSACTION;
+
+bm_driver_stop = 0;
 
 $display(" %0d : Environment : Configuration - The curent Transaction is %s", $time,current_transaction);
 
@@ -122,13 +124,10 @@ endtask : cfg_dut
 
 task start_transaction();
 $display(" %0d : Environment : start of start_transaction() method",$time);
-
 fork
-
 apb_agent.start();
 bm_agent.start();
 sb.start();
-
 join_any
 
 $display(" %0d : Environment : end of start_transaction() method",$time);
@@ -140,7 +139,7 @@ endtask : start_transaction
 
 task start();
 $display(" %0d : Environment : start of start() method",$time);
-repeat(2) begin
+repeat(150) begin
 cfg_dut();
 start_transaction();
 wait_for_end();
@@ -155,7 +154,7 @@ endtask : start
 
 task wait_for_end();
 $display(" %0d : Environment : start of wait_for_end() method",$time);
-#30000
+#20000
 $display(" %0d : Environment : end of wait_for_end() method",$time);
 endtask : wait_for_end
 
@@ -182,11 +181,16 @@ task report();
 $display(" %0d : Error Report : The number of errors is %0d", $time, errors);
 
 if(apbmailbox.num() !== 0)
+begin
 $display(" %0d : Error Report : The APB_Monitor Mailbox has %0d  messages", $time,apbmailbox.num()); 
+apbmailbox = new();
+end
 
 if(bmmailbox.num() !== 0)
-$display(" %0d : Error Report : The BM_Monitor Mailbox has %0d  messages", $time,apbmailbox.num()); 
-
+begin
+$display(" %0d : Error Report : The BM_Monitor Mailbox has %0d  messages", $time,bmmailbox.num()); 
+bmmailbox = new();
+end
 endtask : report
 
 endclass

@@ -7,6 +7,7 @@ vlog -reportprogress 300 -work work {D:/Verification-of-APBtoBurst/RTL code/regi
 vlog -reportprogress 300 -work work {D:/Verification-of-APBtoBurst/RTL code/rtl_top.v}
 vlog -reportprogress 300 -work work {D:/Verification-of-APBtoBurst/verifc/register_model.sv}
 vlog -reportprogress 300 -work work {D:/Verification-of-APBtoBurst/verifc/interface.sv}
+vlog -reportprogress 300 -work work {D:/Verification-of-APBtoBurst/verifc/coverage.sv}
 vlog -reportprogress 300 -work work {D:/Verification-of-APBtoBurst/verifc/Burst.sv}
 vlog -reportprogress 300 -work work {D:/Verification-of-APBtoBurst/verifc/APB_transfer.sv}
 vlog -reportprogress 300 -work work {D:/Verification-of-APBtoBurst/verifc/BM_Generator.sv}

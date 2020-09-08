@@ -17,12 +17,15 @@
 
 `include "register_model.sv"
 `include "APB_transfer.sv"
+`include "coverage.sv"
 
 class APB_Driver;
 
 virtual apb_interface.APB_DRIVER apb_intf;
 
 mailbox apb_transfer_mailbox;
+
+coverage cov = new();
 
 function new(virtual apb_interface.APB_DRIVER apb_intf_new, mailbox apb_transfer_mailbox_new);
 this.apb_intf = apb_intf_new;
@@ -104,7 +107,7 @@ end
 else if (current_transaction == READ_TRANSACTION)
 begin
 repeat (length_reg_copy) begin
-wait(apb_intf.apb_driver_cb.apb_rd_done);
+wait(apb_intf.apb_driver_cb.apb_rd_done & bm_driver_stop);
 apb_transfer_mailbox.get(apbt_rcv);
 apbt_rcv.display();
 drive_transfer(apbt_rcv);
@@ -118,6 +121,7 @@ endtask : start
 
 
 virtual protected task drive_transfer(APB_transfer apbt);
+cov.sample_apb_transfer(apbt);
 this.apb_intf.apb_driver_cb.paddr   <= apbt.paddr;
 this.apb_intf.apb_driver_cb.pwdata  <= apbt.pwdata;
 this.apb_intf.apb_driver_cb.pwrite  <= apbt.pwrite;
@@ -128,7 +132,6 @@ this.apb_intf.apb_driver_cb.penable <= 1;
 this.apb_intf.apb_driver_cb.psel    <= 0;
 this.apb_intf.apb_driver_cb.penable <= 0;
 endtask : drive_transfer
-
 endclass : APB_Driver
 
 `endif

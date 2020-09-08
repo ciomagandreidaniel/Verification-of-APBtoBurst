@@ -3,6 +3,7 @@
 
 `include "Burst.sv"
 `include "Burst_ready.sv"
+`include "register_model.sv"
 class BM_Driver;
 
 virtual bm_interface.BM_DRIVER bm_intf;
@@ -24,7 +25,7 @@ task start_burst_ready();
 
 burst_rdy = new();
 
- forever begin
+ while(start_scoreboard) begin
   if(burst_rdy.randomize())
   begin
    repeat(burst_rdy.generated_burst_ready)
@@ -44,6 +45,8 @@ endtask : start_burst_ready
 
 task start_read();
 
+if(current_transaction == READ_TRANSACTION)
+begin
 bit [7:0] data_byte;
 int i = 0; 
 
@@ -74,6 +77,8 @@ repeat(bm_intf.bm_driver_cb.db_length) begin
  i = 0;
     $display(" %0d : BM_Driver : Put data byte %0d on data_burst_in", $time,data_byte);
  end
+end
+bm_driver_stop = 1;
 end
 endtask : start_read
 

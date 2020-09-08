@@ -72,7 +72,7 @@ $display(" %0d : APB_Monitor :  Start task", $time);
 $display(" %0d : APB_Monitor :  The number of Normal Bursts  is %0d", $time,normal_bursts);
 $display(" %0d : APB_Monitor :  Last Burst size  is %0d", $time,off_burst_size);  
 
-forever begin
+repeat(length_reg_copy + 1) begin
 
       
       if (j < normal_bursts) begin
@@ -163,7 +163,7 @@ else if(current_transaction == READ_TRANSACTION)
 begin
 bit [7:0] data_to_read;
 $display(" %0d : APB_Monitor :  Start task", $time);
-forever begin
+repeat(length_reg_copy) begin
 @(posedge apb_intf.clk);
 wait((~apb_intf.apb_monitor_cb.pwrite)  & 
        apb_intf.apb_monitor_cb.psel    & 
@@ -173,6 +173,7 @@ data_to_read = apb_intf.apb_monitor_cb.prdata;
 mon2scb.put(data_to_read);
 $display(" %0d : APB_Monitor : Data byte send to Scoreboard via mailbox", $time);
 end
+start_scoreboard = 0;
 end
 
 endtask : start
