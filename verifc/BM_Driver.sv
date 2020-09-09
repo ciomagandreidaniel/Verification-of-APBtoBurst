@@ -78,6 +78,7 @@ repeat(bm_intf.bm_driver_cb.db_length) begin
     $display(" %0d : BM_Driver : Put data byte %0d on data_burst_in", $time,data_byte);
  end
 end
+//bm_master has write all the data in the register bank
 bm_driver_stop = 1;
 end
 endtask : start_read

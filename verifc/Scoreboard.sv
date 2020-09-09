@@ -17,7 +17,7 @@ this.frombm2sb  = frombm2sb_new;
 endfunction : new
 
 task start();
-start_scoreboard = 1;
+
 //if current transaction is WRITE TRANSACTION
 
 $display(" %0d : Scoreboard : Start Task start_scoreboard is %0d", $time, start_scoreboard);

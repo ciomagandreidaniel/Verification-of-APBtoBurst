@@ -14,6 +14,7 @@ APB_Monitor   mont;
 
 mailbox mailbox_genr_drvr;
 
+//constructor
 function new(
 virtual apb_interface.APB_DRIVER apb_driver_intf_new,
 virtual apb_interface.APB_MONITOR apb_monitor_intf_new,
@@ -27,12 +28,20 @@ genr = new(mailbox_genr_drvr);
 
 endfunction : new
 
+//-----------------------------------------------------------------
+// CFG TASK
+//-----------------------------------------------------------------
+
 task cfg();
 
 genr.cfg();
 drvr.cfg();
 
 endtask : cfg
+
+//-----------------------------------------------------------------
+// START TASK
+//-----------------------------------------------------------------
 
 task start();
 

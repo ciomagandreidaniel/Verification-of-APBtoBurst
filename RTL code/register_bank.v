@@ -20,7 +20,7 @@ input            rc_rb_idle           ,// the signal it's LOW if the RC it's bus
 
 //register bank controller outputs
 output reg       rb_rc_ack            ,//it's high when we receive a request and data
-output reg [7:0] rb_rc_data           ,//the readed data
+output     [7:0] rb_rc_data           ,//the readed data
 output reg       rb_rc_rd_done        ,// when the DB finish the read transaction
 ///////////////////////////////////////
 //data burst controller inputs
@@ -108,9 +108,7 @@ if(rc_rb_req )rb_rc_ack<=1'b1;else
               rb_rc_ack<=1'b0;
 
 //rb_rc_data 
-always @(posedge clk or negedge rst_n)
-if(rc_rb_req & ~rc_rb_rw) rb_rc_data<=data_reg[rc_rb_addr];
-
+assign rb_rc_data=(rc_rb_req & ~rc_rb_rw)?data_reg[rc_rb_addr]:(rc_rb_rw)?'bx:rb_rc_data;
 
 
 //rb_rc_rd_done

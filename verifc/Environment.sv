@@ -109,8 +109,11 @@ std::randomize(current_transaction);
 //current_transaction = WRITE_TRANSACTION;
 //current_transaction = READ_TRANSACTION;
 
+//becouse of the delay of apb_rd_done
 bm_driver_stop = 0;
 
+//starting the scoreboard
+start_scoreboard = 1;
 $display(" %0d : Environment : Configuration - The curent Transaction is %s", $time,current_transaction);
 
 apb_agent.cfg();
@@ -154,7 +157,10 @@ endtask : start
 
 task wait_for_end();
 $display(" %0d : Environment : start of wait_for_end() method",$time);
-#20000
+//#30000
+wait(start_scoreboard == 0);
+@(posedge apb_driver_intf.clk);
+@(posedge apb_driver_intf.clk);
 $display(" %0d : Environment : end of wait_for_end() method",$time);
 endtask : wait_for_end
 

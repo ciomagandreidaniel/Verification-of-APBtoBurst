@@ -64,6 +64,10 @@ this.apbt = apbt;
 apb_transfer_coverage.sample();
 endtask :sample_apb_transfer
 
+
+
+
+
 function new();
 burst_coverage = new();
 apb_transfer_coverage = new();

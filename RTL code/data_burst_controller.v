@@ -136,7 +136,7 @@ if(~rb_db_rw )db_rb_addr<=generated_rb_addr;
 //db_rb_req
 always @(posedge clk or negedge rst_n) 
 if(~rst_n                                                               )db_rb_req<=1'b0;else
-if(~burst_ready & state == GEN_BURST                                    )db_rb_req<=1'b0;else
+if(~burst_ready                                                         )db_rb_req<=1'b0;else
 if((state==READ_BURST & burst_valid) | (state==GEN_BURST & burst_ready) )db_rb_req<=1'b1;else
                                                                          db_rb_req<=1'b0;
 												   

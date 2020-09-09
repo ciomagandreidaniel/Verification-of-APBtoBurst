@@ -107,6 +107,7 @@ end
 else if (current_transaction == READ_TRANSACTION)
 begin
 repeat (length_reg_copy) begin
+//wait for apb_rd_done or bm_driver_stop
 wait(apb_intf.apb_driver_cb.apb_rd_done & bm_driver_stop);
 apb_transfer_mailbox.get(apbt_rcv);
 apbt_rcv.display();
