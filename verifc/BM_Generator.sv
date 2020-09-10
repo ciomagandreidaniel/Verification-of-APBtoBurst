@@ -9,6 +9,10 @@ function new(mailbox bm_mailbox_generator_new);
 this.bm_mailbox_generator = bm_mailbox_generator_new;
 endfunction : new
 
+//-----------------------------------------------------------------------------------------
+// START TASK
+//-----------------------------------------------------------------------------------------
+
 task start();
 
 if(current_transaction == READ_TRANSACTION)

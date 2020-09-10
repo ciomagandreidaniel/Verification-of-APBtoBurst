@@ -27,6 +27,7 @@ kind_e          pwrite;//command type
 
 constraint c1{paddr[8:0] >= 0; paddr <= 260;};
 
+//function to configurate the APB_transfer
 function void cfg(kind_e pwrite_new, bit[8:0] paddr_new);
 
 this.pwrite = pwrite_new;

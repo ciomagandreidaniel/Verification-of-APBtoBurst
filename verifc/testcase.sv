@@ -37,7 +37,6 @@ end
 
 final
 $display("TIME: %0d -------------------------- End of testcase -------------------------- ",$time);
-
 endprogram : testcase
 `endif
 

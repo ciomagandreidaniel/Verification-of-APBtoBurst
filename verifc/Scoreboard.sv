@@ -11,10 +11,15 @@ mailbox frombm2sb;
 
 coverage cov = new();
 
+//constructor
 function new(mailbox fromapb2sb_new, mailbox frombm2sb_new);
 this.fromapb2sb = fromapb2sb_new;
 this.frombm2sb  = frombm2sb_new;
 endfunction : new
+
+//---------------------------------------------------------------------------------------------
+// START TASK
+//---------------------------------------------------------------------------------------------
 
 task start();
 

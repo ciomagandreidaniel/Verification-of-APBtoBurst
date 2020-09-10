@@ -13,6 +13,7 @@ BM_Generator genr;
 
 mailbox mailbox_genr_drvr;
 
+//constructor
 function new(
 virtual bm_interface.BM_DRIVER bm_driver_intf_new,
 virtual bm_interface.BM_MONITOR bm_monitor_intf_new,
@@ -24,15 +25,20 @@ mont = new(bm_monitor_intf_new, mon2scb_new);
 genr = new(mailbox_genr_drvr);
 endfunction : new 
 
+//----------------------------------------------------------------------
+// START TASK
+//----------------------------------------------------------------------
 task start();
 genr.start();
 fork
-//drvr.start_burst_ready();
 drvr.start_read();
 mont.start();
 join_any
 endtask : start
 
+//----------------------------------------------------------------------
+// BURST_READY_GEN TASK
+//----------------------------------------------------------------------
 task burst_ready_gen();
 drvr.start_burst_ready();
 endtask : burst_ready_gen

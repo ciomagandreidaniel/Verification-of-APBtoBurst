@@ -12,6 +12,7 @@ virtual bm_interface.BM_DRIVER bm_intf;
 Burst_ready burst_rdy;
 mailbox bm_mailbox_driver;
 
+//constructor
 function new(virtual bm_interface.BM_DRIVER bm_intf_new, mailbox bm_mailbox_driver_new);
 this.bm_intf           = bm_intf_new;
 this.bm_mailbox_driver = bm_mailbox_driver_new;

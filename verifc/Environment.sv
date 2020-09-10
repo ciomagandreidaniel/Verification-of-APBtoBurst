@@ -142,7 +142,7 @@ endtask : start_transaction
 
 task start();
 $display(" %0d : Environment : start of start() method",$time);
-repeat(150) begin
+repeat(400) begin
 cfg_dut();
 start_transaction();
 wait_for_end();
@@ -157,7 +157,6 @@ endtask : start
 
 task wait_for_end();
 $display(" %0d : Environment : start of wait_for_end() method",$time);
-//#30000
 wait(start_scoreboard == 0);
 @(posedge apb_driver_intf.clk);
 @(posedge apb_driver_intf.clk);
@@ -186,16 +185,23 @@ task report();
 
 $display(" %0d : Error Report : The number of errors is %0d", $time, errors);
 
+if(errors != 0)
+begin
+$stop;
+end
+
 if(apbmailbox.num() !== 0)
 begin
 $display(" %0d : Error Report : The APB_Monitor Mailbox has %0d  messages", $time,apbmailbox.num()); 
-apbmailbox = new();
+$stop;
+//apbmailbox = new();
 end
 
 if(bmmailbox.num() !== 0)
 begin
 $display(" %0d : Error Report : The BM_Monitor Mailbox has %0d  messages", $time,bmmailbox.num()); 
-bmmailbox = new();
+$stop;
+//bmmailbox = new();
 end
 endtask : report
 

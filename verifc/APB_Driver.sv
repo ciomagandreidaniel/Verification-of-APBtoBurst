@@ -25,8 +25,11 @@ virtual apb_interface.APB_DRIVER apb_intf;
 
 mailbox apb_transfer_mailbox;
 
+//coverage class
 coverage cov = new();
 
+
+//constructor
 function new(virtual apb_interface.APB_DRIVER apb_intf_new, mailbox apb_transfer_mailbox_new);
 this.apb_intf = apb_intf_new;
 this.apb_transfer_mailbox = apb_transfer_mailbox_new;
@@ -120,6 +123,9 @@ end
 
 endtask : start
 
+//------------------------------------------------------------------------------------------------------------
+// DRIVE_TRANSFER TASK
+//------------------------------------------------------------------------------------------------------------
 
 virtual protected task drive_transfer(APB_transfer apbt);
 cov.sample_apb_transfer(apbt);

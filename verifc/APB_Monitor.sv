@@ -55,10 +55,13 @@ task start();
 if(current_transaction == WRITE_TRANSACTION)
 
 begin
-
+//index of bursts
 int j = 0;
+//index of data
 int i = 0;
+//the number of normal bursts
 int normal_bursts  = length_reg_copy / max_burst_size_reg_copy;
+//the size of last burst
 int off_burst_size = length_reg_copy % max_burst_size_reg_copy;
 
 burst = new();
@@ -173,6 +176,7 @@ data_to_read = apb_intf.apb_monitor_cb.prdata;
 mon2scb.put(data_to_read);
 $display(" %0d : APB_Monitor : Data byte send to Scoreboard via mailbox", $time);
 end
+//stop the scoreboard
 start_scoreboard = 0;
 end
 
